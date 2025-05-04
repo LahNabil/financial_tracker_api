@@ -1,0 +1,26 @@
+services:
+  postgres:
+    container_name: postgres-budget
+    image: postgres
+    environment:
+      - 'POSTGRES_DB=budget_tracker'
+      - 'POSTGRES_PASSWORD=admin'
+      - 'POSTGRES_USER=postgres'
+      - 'PGDATA: /var/lib/posgresql/data'
+    labels:
+      - "org.springframework.boot.service-connection=postgres"
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - spring-budget
+    restart: unless-stopped
+
+networks:
+  spring-budget:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
