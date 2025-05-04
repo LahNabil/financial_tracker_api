@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.lahlalia.budgetapi.enums.TransactionCategory;
 import net.lahlalia.budgetapi.enums.TransactionStatus;
+import net.lahlalia.budgetapi.enums.TransactionType;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -34,6 +35,9 @@ public class Transaction {
     private TransactionStatus status;
     @Enumerated(EnumType.STRING)
     private TransactionCategory category;
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "budgetPlan_id")

@@ -48,4 +48,14 @@ public class BudgetPlanController {
         return ResponseEntity.ok(budgetPlanService.updateBudgetPlan(id,request, connectedUser));
     }
 
+    @DeleteMapping("/id")
+    public ResponseEntity<Boolean> deleteBudgetPlan(
+            @PathVariable Integer id,
+            Authentication connectedUser
+    ){
+        budgetPlanService.deleteBudgetPlan(id, connectedUser);
+        return ResponseEntity.ok(true);
+
+    }
+
 }

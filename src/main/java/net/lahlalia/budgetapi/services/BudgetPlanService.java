@@ -11,4 +11,6 @@ public interface BudgetPlanService {
 
 
     BudgetPlanDto updateBudgetPlan(Integer id, BudgetPlanDto request, Authentication connectedUser);
+
+    void deleteBudgetPlan(Integer id, Authentication connectedUser);
 }

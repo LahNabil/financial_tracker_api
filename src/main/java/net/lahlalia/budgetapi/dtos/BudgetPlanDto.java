@@ -1,7 +1,6 @@
 package net.lahlalia.budgetapi.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -15,8 +14,14 @@ public class BudgetPlanDto {
 
     Integer id;
     @NotNull(message = "100")
-    @NotEmpty(message = "100")
-    private String month;
-    @NotNull(message = "101")
+    @Positive(message = "101")
+    @Min(value = 1, message = "102" )
+    @Max(value = 12, message ="103" )
+    private Integer month;
+    @NotNull(message = "104")
+    @Positive(message = "105")
+    private Integer year;
+    @NotNull(message = "106")
+    @Positive(message = "107")
     private BigDecimal initialIncome;
 }

@@ -91,4 +91,17 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
         BudgetPlan updated = budgetPlanRepository.save(budgetPlan);
         return budgetPlanMapper.toDto(updated);
     }
+
+    @Override
+    public void deleteBudgetPlan(Integer id, Authentication connectedUser) {
+        User user = ((User) connectedUser.getPrincipal());
+        BudgetPlan budgetPlan = budgetPlanRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No Budget Plan found with this ID"));
+
+        if (!budgetPlan.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to delete this budget plan");
+        }
+        budgetPlanRepository.delete(budgetPlan);
+
+    }
 }

@@ -23,7 +23,8 @@ public class BudgetPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String month;
+    private Integer year;
+    private Integer month;
     private BigDecimal initialIncome;
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -39,7 +40,7 @@ public class BudgetPlan {
     private Integer lastModifiedBy;
 
 
-    @OneToMany(mappedBy = "budgetPlan")
+    @OneToMany(mappedBy = "budgetPlan",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
     @ManyToOne
