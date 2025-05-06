@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class BudgetPlanDto {
 
-    Integer id;
     @NotNull(message = "100")
     @Positive(message = "101")
     @Min(value = 1, message = "102" )

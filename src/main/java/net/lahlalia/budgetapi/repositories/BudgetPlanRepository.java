@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BudgetPlanRepository extends JpaRepository<BudgetPlan, Integer> {
+import java.util.UUID;
 
-    Page<BudgetPlan> findAllByUserId(Integer userId, Pageable pageable);
+public interface BudgetPlanRepository extends JpaRepository<BudgetPlan, UUID> {
+
+    Page<BudgetPlan> findAllByUserId(UUID userId, Pageable pageable);
 }

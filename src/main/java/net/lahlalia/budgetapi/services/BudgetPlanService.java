@@ -4,13 +4,15 @@ import net.lahlalia.budgetapi.dtos.BudgetPlanDto;
 import net.lahlalia.budgetapi.dtos.PageResponse;
 import org.springframework.security.core.Authentication;
 
+import java.util.UUID;
+
 public interface BudgetPlanService {
-    Integer save(BudgetPlanDto request, Authentication connectedUser);
-    BudgetPlanDto findById(Integer id, Authentication connectedUser);
+    UUID save(BudgetPlanDto request, Authentication connectedUser);
+    BudgetPlanDto findById(UUID id, Authentication connectedUser);
     PageResponse<BudgetPlanDto> findAllBudgets(int page, int size, Authentication connectedUser);
 
 
-    BudgetPlanDto updateBudgetPlan(Integer id, BudgetPlanDto request, Authentication connectedUser);
+    BudgetPlanDto updateBudgetPlan(UUID id, BudgetPlanDto request, Authentication connectedUser);
 
-    void deleteBudgetPlan(Integer id, Authentication connectedUser);
+    void deleteBudgetPlan(UUID id, Authentication connectedUser);
 }

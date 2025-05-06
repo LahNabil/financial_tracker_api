@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -29,7 +30,7 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
 
 
     @Override
-    public Integer save(BudgetPlanDto request, Authentication connectedUser) {
+    public UUID save(BudgetPlanDto request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         BudgetPlan budgetPlan = budgetPlanMapper.toEntity(request);
         budgetPlan.setUser(user);
@@ -37,7 +38,7 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
     }
 
     @Override
-    public BudgetPlanDto findById(Integer id, Authentication connectedUser) {
+    public BudgetPlanDto findById(UUID id, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         BudgetPlan budgetPlan = budgetPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No budget Plan found with this ID"));
@@ -78,7 +79,7 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
     }
 
     @Override
-    public BudgetPlanDto updateBudgetPlan(Integer id, BudgetPlanDto request, Authentication connectedUser) {
+    public BudgetPlanDto updateBudgetPlan(UUID id, BudgetPlanDto request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         BudgetPlan budgetPlan = budgetPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Budget Plan found with this ID"));
@@ -93,7 +94,7 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
     }
 
     @Override
-    public void deleteBudgetPlan(Integer id, Authentication connectedUser) {
+    public void deleteBudgetPlan(UUID id, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         BudgetPlan budgetPlan = budgetPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Budget Plan found with this ID"));

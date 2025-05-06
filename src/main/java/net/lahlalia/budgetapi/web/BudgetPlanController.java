@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/budget")
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class BudgetPlanController {
     private final BudgetPlanService budgetPlanService;
 
     @PostMapping("/")
-    public ResponseEntity<Integer> saveBudgetPlan(
+    public ResponseEntity<UUID> saveBudgetPlan(
             @Valid @RequestBody BudgetPlanDto request,
             Authentication connectedUser
             ){
@@ -24,7 +26,7 @@ public class BudgetPlanController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<BudgetPlanDto> findBudgetPlanById(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") UUID id,
             Authentication connectedUser
     ){
         return ResponseEntity.ok(budgetPlanService.findById(id, connectedUser));
@@ -41,7 +43,7 @@ public class BudgetPlanController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BudgetPlanDto> updateBudgetPlan(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @RequestBody @Valid BudgetPlanDto request,
             Authentication connectedUser
     ){
@@ -50,7 +52,7 @@ public class BudgetPlanController {
 
     @DeleteMapping("/id")
     public ResponseEntity<Boolean> deleteBudgetPlan(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             Authentication connectedUser
     ){
         budgetPlanService.deleteBudgetPlan(id, connectedUser);

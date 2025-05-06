@@ -2,6 +2,7 @@ package net.lahlalia.budgetapi.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,8 +23,9 @@ import java.util.List;
 public class BudgetPlan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @Column(columnDefinition = "UUID", updatable = false)
+    private UUID id;
     private Integer year;
     private Integer month;
     private BigDecimal initialIncome;
@@ -34,10 +37,10 @@ public class BudgetPlan {
     private LocalDateTime lastModifiedDate;
     @CreatedBy
     @Column(nullable = false, updatable = false)
-    private Integer createdBy;
+    private UUID createdBy;
     @LastModifiedBy
     @Column(insertable = false)
-    private Integer lastModifiedBy;
+    private UUID lastModifiedBy;
 
 
     @OneToMany(mappedBy = "budgetPlan",cascade = CascadeType.ALL, orphanRemoval = true)
