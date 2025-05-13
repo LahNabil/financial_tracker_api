@@ -9,15 +9,19 @@ import net.lahlalia.budgetapi.dtos.UpdateTransactionDto;
 import net.lahlalia.budgetapi.entities.BudgetPlan;
 import net.lahlalia.budgetapi.entities.Transaction;
 import net.lahlalia.budgetapi.entities.User;
+import net.lahlalia.budgetapi.enums.TransactionStatus;
+import net.lahlalia.budgetapi.enums.TransactionType;
 import net.lahlalia.budgetapi.mappers.TransactionMapper;
 import net.lahlalia.budgetapi.repositories.BudgetPlanRepository;
 import net.lahlalia.budgetapi.repositories.TransactionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -142,4 +146,69 @@ public class TransactionServiceImpl implements TransactionService{
         // Map to DTO and return
         return transactionMapper.toDto(transaction);
     }
+
+    @Override
+    public BigDecimal getTotalExpenseByBudget(UUID budgetId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+
+        // Check if the budget belongs to the user
+        BudgetPlan budgetPlan = budgetPlanRepository.findById(budgetId)
+                .orElseThrow(() -> new EntityNotFoundException("No budget found with ID: " + budgetId));
+
+        if (!budgetPlan.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to access this budget.");
+        }
+
+        // Fetch the total expense for the real transactions only
+        return transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(budgetId, TransactionType.EXPENSE, TransactionStatus.REAL)
+                .orElse(BigDecimal.ZERO);
+    }
+
+    @Override
+    public BigDecimal getTotalIncomeByBudget(UUID budgetId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+
+        // Check if the budget belongs to the user
+        BudgetPlan budgetPlan = budgetPlanRepository.findById(budgetId)
+                .orElseThrow(() -> new EntityNotFoundException("No budget found with ID: " + budgetId));
+
+        if (!budgetPlan.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to access this budget.");
+        }
+
+        // Fetch the total income for the real transactions only
+        return transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(budgetId, TransactionType.INCOME, TransactionStatus.REAL)
+                .orElse(BigDecimal.ZERO);
+    }
+
+    @Override
+    public BigDecimal getRemainingBudget(UUID budgetId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+
+        // Check if the budget belongs to the user
+        BudgetPlan budgetPlan = budgetPlanRepository.findById(budgetId)
+                .orElseThrow(() -> new EntityNotFoundException("No budget found with ID: " + budgetId));
+
+        if (!budgetPlan.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to access this budget.");
+        }
+
+        // Fetch the initial income of the budget plan
+        BigDecimal initialIncome = budgetPlan.getInitialIncome();
+
+        // Fetch the total real income (as you already have a method for this)
+        BigDecimal totalIncome = transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(budgetId, TransactionType.INCOME, TransactionStatus.REAL)
+                .orElse(BigDecimal.ZERO);
+
+        // Fetch the total real expense (similarly as for income)
+        BigDecimal totalExpense = transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(budgetId, TransactionType.EXPENSE, TransactionStatus.REAL)
+                .orElse(BigDecimal.ZERO);
+
+        // Calculate the remaining budget
+        BigDecimal remainingBudget = initialIncome.subtract(totalExpense).add(totalIncome);
+
+        return remainingBudget;
+    }
+
+
 }

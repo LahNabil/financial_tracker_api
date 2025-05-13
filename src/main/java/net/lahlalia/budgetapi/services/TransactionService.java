@@ -5,6 +5,7 @@ import net.lahlalia.budgetapi.dtos.TransactionDto;
 import net.lahlalia.budgetapi.dtos.UpdateTransactionDto;
 import org.springframework.security.core.Authentication;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface TransactionService {
@@ -16,4 +17,7 @@ public interface TransactionService {
 
     void deleteTransaction(UUID id, Authentication connectedUser);
     TransactionDto getTransactionById(UUID id, Authentication connectedUser);
+    BigDecimal getTotalExpenseByBudget(UUID budgetId, Authentication connectedUser);
+    BigDecimal getTotalIncomeByBudget(UUID budgetId, Authentication connectedUser);
+    BigDecimal getRemainingBudget(UUID budgetId, Authentication connectedUser);
 }
