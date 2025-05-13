@@ -22,7 +22,7 @@ import java.util.UUID;
 @Builder
 public class TransactionDto {
 
-
+    private UUID id;
     @NotNull(message = "200")
     @NotEmpty(message = "201")
     @NotBlank(message = "201")

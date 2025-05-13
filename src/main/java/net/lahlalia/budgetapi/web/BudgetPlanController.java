@@ -50,13 +50,13 @@ public class BudgetPlanController {
         return ResponseEntity.ok(budgetPlanService.updateBudgetPlan(id,request, connectedUser));
     }
 
-    @DeleteMapping("/id")
-    public ResponseEntity<Boolean> deleteBudgetPlan(
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBudgetPlan(
             @PathVariable UUID id,
             Authentication connectedUser
     ){
         budgetPlanService.deleteBudgetPlan(id, connectedUser);
-        return ResponseEntity.ok(true);
+        return ResponseEntity.noContent().build();
 
     }
 

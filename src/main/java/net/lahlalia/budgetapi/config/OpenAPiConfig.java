@@ -23,8 +23,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 license = @License(
                         name = "Licesne Name",
                         url = "https://some-url.com"
-                ),
-                termsOfService = "Terms of Service"
+                )
         ),
         servers = {
                 @Server(
@@ -33,7 +32,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "Prod ENV",
-                        url = "url.com"
+                        url = "https://lahlalianb.xyz"
                 )
         },
         security = {

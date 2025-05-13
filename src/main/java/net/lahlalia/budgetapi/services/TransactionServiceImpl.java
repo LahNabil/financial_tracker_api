@@ -33,25 +33,33 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public UUID save(TransactionDto request, Authentication connectedUser) {
-        User user = ((User) connectedUser.getPrincipal());
+        User user = (User) connectedUser.getPrincipal();
+
+        // Validate if the BudgetPlan exists and if the user is authorized
         BudgetPlan budgetPlan = budgetPlanRepository.findById(request.getBudgetPlanId())
-                .orElseThrow(()-> new EntityNotFoundException("No BudgetPlan found"));
+                .orElseThrow(() -> new EntityNotFoundException("No BudgetPlan found"));
+
         if (!budgetPlan.getUser().getId().equals(user.getId())) {
             throw new EntityNotFoundException("You are not authorized to add a transaction to this BudgetPlan");
         }
+
+        // Validate that the transaction date matches the budget's month and year
         LocalDate transactionDate = request.getDate();
         YearMonth budgetMonth = YearMonth.of(budgetPlan.getYear(), budgetPlan.getMonth());
         YearMonth transactionMonth = YearMonth.from(transactionDate);
+
         if (!budgetMonth.equals(transactionMonth)) {
             throw new IllegalArgumentException("Transaction date must be in the same month and year as the BudgetPlan");
         }
-        Transaction transaction = transactionMapper.toEntity(request);
-        transaction.setId(null);
-        transaction.setBudgetPlan(budgetPlan);
 
+        // Create and save the transaction
+        Transaction transaction = transactionMapper.toEntity(request);
+        transaction.setId(null);  // Ensure no ID is set for the new transaction
+        transaction.setBudgetPlan(budgetPlan);  // Set the associated budget plan
 
         return transactionRepository.save(transaction).getId();
     }
+
 
     @Override
     public PageResponse<TransactionDto> findAllTransactionsByBudget(UUID budgetId, int page, int size, Authentication connectedUser) {
@@ -117,5 +125,21 @@ public class TransactionServiceImpl implements TransactionService{
             throw new EntityNotFoundException("You are not authorized to delete this transaction");
         }
         transactionRepository.delete(transaction);
+    }
+    @Override
+    public TransactionDto getTransactionById(UUID id, Authentication connectedUser) {
+        User user = ((User) connectedUser.getPrincipal());
+
+        // Find the transaction
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No transaction found with ID: " + id));
+
+        // Check authorization
+        if (!transaction.getBudgetPlan().getUser().getId().equals(user.getId())) {
+            throw new EntityNotFoundException("You are not authorized to view this transaction");
+        }
+
+        // Map to DTO and return
+        return transactionMapper.toDto(transaction);
     }
 }

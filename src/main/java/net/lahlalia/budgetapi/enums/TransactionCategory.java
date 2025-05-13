@@ -1,8 +1,7 @@
 package net.lahlalia.budgetapi.enums;
 
 public enum TransactionCategory {
-    INCOME,
-    BONUS,
+    
 
     // Essentials
     RENT_MORTGAGE,

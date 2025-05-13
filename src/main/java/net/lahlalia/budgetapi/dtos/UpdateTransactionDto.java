@@ -13,6 +13,7 @@ import net.lahlalia.budgetapi.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 public class UpdateTransactionDto {
 
 
+    private UUID id;
     @NotNull(message = "200")
     @NotEmpty(message = "201")
     @NotBlank(message = "201")
@@ -40,6 +42,7 @@ public class UpdateTransactionDto {
     @Enumerated(EnumType.STRING)
     TransactionType type;
     String description;
+    UUID BudgetPlanId;
 
 }
 

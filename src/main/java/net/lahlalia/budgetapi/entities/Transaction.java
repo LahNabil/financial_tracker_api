@@ -31,6 +31,7 @@ public class Transaction {
     @GeneratedValue(generator = "uuid2")
     @Column(columnDefinition = "UUID", updatable = false)
     private UUID id;
+    @Column(unique = true)
     private String title;
     private BigDecimal amount;
     private LocalDate date;

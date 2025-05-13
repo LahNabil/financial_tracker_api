@@ -19,12 +19,22 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
-    @PostMapping("/")
+    @PostMapping("/{budgetPlanId}")
     public ResponseEntity<UUID> saveTransaction(
+            @PathVariable UUID budgetPlanId,
             @Valid @RequestBody TransactionDto request,
             Authentication connectedUser
             ){
-        return ResponseEntity.ok(transactionService.save(request,connectedUser));
+        request.setBudgetPlanId(budgetPlanId);
+        UUID transactionId = transactionService.save(request, connectedUser);
+        return ResponseEntity.ok(transactionId);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionDto> getTransactionById(
+            @PathVariable UUID id,
+            Authentication connectedUser) {
+        TransactionDto transaction = transactionService.getTransactionById(id, connectedUser);
+        return ResponseEntity.ok(transaction);
     }
     
     @GetMapping("/budget/{budgetId}")

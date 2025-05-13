@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class BudgetPlanDto {
 
+    private UUID id;
     @NotNull(message = "100")
     @Positive(message = "101")
     @Min(value = 1, message = "102" )

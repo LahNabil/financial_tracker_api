@@ -15,4 +15,5 @@ public interface TransactionService {
     TransactionDto updateTransaction(UUID id, UpdateTransactionDto request, Authentication connectedUser);
 
     void deleteTransaction(UUID id, Authentication connectedUser);
+    TransactionDto getTransactionById(UUID id, Authentication connectedUser);
 }
