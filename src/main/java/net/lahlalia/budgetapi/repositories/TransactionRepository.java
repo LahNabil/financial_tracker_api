@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,5 +32,8 @@ SELECT transaction from Transaction transaction WHERE transaction.budgetPlan.id 
             "FROM BudgetPlan bp WHERE bp.id = :budgetId")
     BigDecimal calculateRemainingBudget(@Param("budgetId") UUID budgetId);
 
+
+    @Query("SELECT t FROM Transaction t WHERE t.budgetPlan.id = :budgetPlanId ORDER BY t.date ASC")
+    List<Transaction> findTransactionsByBudgetPlanIdOrderByDate(@Param("budgetPlanId") UUID budgetPlanId);
 
 }

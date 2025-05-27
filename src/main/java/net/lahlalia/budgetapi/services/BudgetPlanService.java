@@ -1,5 +1,6 @@
 package net.lahlalia.budgetapi.services;
 
+import net.lahlalia.budgetapi.dtos.BudgetChartDataDto;
 import net.lahlalia.budgetapi.dtos.BudgetPlanDto;
 import net.lahlalia.budgetapi.dtos.PageResponse;
 import org.springframework.security.core.Authentication;
@@ -15,4 +16,5 @@ public interface BudgetPlanService {
     BudgetPlanDto updateBudgetPlan(UUID id, BudgetPlanDto request, Authentication connectedUser);
 
     void deleteBudgetPlan(UUID id, Authentication connectedUser);
+    BudgetChartDataDto getCurrentMonthBudgetWithTransactions(Authentication connectedUser);
 }
