@@ -19,7 +19,7 @@ import java.util.UUID;
 public class BudgetPlanController {
     private final BudgetPlanService budgetPlanService;
 
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UUID> saveBudgetPlan(
             @Valid @RequestBody BudgetPlanDto request,
             Authentication connectedUser
@@ -27,7 +27,7 @@ public class BudgetPlanController {
         return ResponseEntity.ok(budgetPlanService.save(request, connectedUser));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BudgetPlanDto> findBudgetPlanById(
             @PathVariable("id") UUID id,
             Authentication connectedUser
@@ -35,7 +35,7 @@ public class BudgetPlanController {
         return ResponseEntity.ok(budgetPlanService.findById(id, connectedUser));
     }
 
-    @GetMapping("/")
+    @GetMapping(value="/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PageResponse<BudgetPlanDto>> findAllBudgets(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -44,7 +44,7 @@ public class BudgetPlanController {
         return ResponseEntity.ok(budgetPlanService.findAllBudgets(page, size, connectedUser));
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BudgetPlanDto> updateBudgetPlan(
             @PathVariable UUID id,
             @RequestBody @Valid BudgetPlanDto request,
@@ -62,7 +62,7 @@ public class BudgetPlanController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/current-month/with-transactions")
+    @GetMapping(value="/current-month/with-transactions", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BudgetChartDataDto> getCurrentMonthBudgetWithTransactions(
             Authentication connectedUser
     ) {

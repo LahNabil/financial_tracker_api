@@ -21,7 +21,7 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
-    @PostMapping(value = "/{budgetPlanId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{budgetPlanId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UUID> saveTransaction(
             @PathVariable UUID budgetPlanId,
             @Valid @RequestBody TransactionDto request,
@@ -32,7 +32,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactionId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionDto> getTransactionById(
             @PathVariable UUID id,
             Authentication connectedUser) {
@@ -40,7 +40,7 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
-    @GetMapping("/remaining-budget/{budgetId}")
+    @GetMapping(value="/remaining-budget/{budgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BigDecimal> getRemainingBudget(
             @PathVariable UUID budgetId,
             Authentication authentication) {
@@ -48,7 +48,7 @@ public class TransactionController {
         return ResponseEntity.ok(remainingBudget);
     }
 
-    @GetMapping("/total-expense/{budgetId}")
+    @GetMapping(value = "/total-expense/{budgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BigDecimal> getTotalExpense(
             @PathVariable UUID budgetId,
             Authentication authentication) {
@@ -56,7 +56,7 @@ public class TransactionController {
         return ResponseEntity.ok(totalExpense);
     }
 
-    @GetMapping("/total-income/{budgetId}")
+    @GetMapping(value="/total-income/{budgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BigDecimal> getTotalIncome(
             @PathVariable UUID budgetId,
             Authentication authentication) {
@@ -64,7 +64,7 @@ public class TransactionController {
         return ResponseEntity.ok(totalIncome);
     }
 
-    @GetMapping("/budget/{budgetId}")
+    @GetMapping(value="/budget/{budgetId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PageResponse<TransactionDto>> findAllTransactionsByBudget(
             @PathVariable("budgetId") UUID budgetId,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -74,7 +74,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.findAllTransactionsByBudget(budgetId, page, size, connectedUser));
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionDto> updateTransaction(
             @PathVariable UUID id,
             @RequestBody @Valid UpdateTransactionDto request,
