@@ -3,6 +3,7 @@ package net.lahlalia.budgetapi.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.lahlalia.budgetapi.dtos.CategorySummaryDto;
 import net.lahlalia.budgetapi.dtos.PageResponse;
 import net.lahlalia.budgetapi.dtos.TransactionDto;
 import net.lahlalia.budgetapi.dtos.UpdateTransactionDto;
@@ -205,10 +206,15 @@ public class TransactionServiceImpl implements TransactionService{
                 .orElse(BigDecimal.ZERO);
 
         // Calculate the remaining budget
-        BigDecimal remainingBudget = initialIncome.subtract(totalExpense).add(totalIncome);
-
-        return remainingBudget;
+        return initialIncome.subtract(totalExpense).add(totalIncome);
     }
+
+    @Override
+    public List<CategorySummaryDto> getExpensesByCategory(UUID budgetId, Authentication connectedUser) {
+        // Optional: validate budget ownership
+        return transactionRepository.getExpensesByCategory(budgetId);
+    }
+
 
 
 }

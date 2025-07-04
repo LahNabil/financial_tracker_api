@@ -1,0 +1,11 @@
+package net.lahlalia.budgetapi.services;
+
+import net.lahlalia.budgetapi.dtos.DashboardResponseDto;
+import org.springframework.security.core.Authentication;
+
+import java.util.UUID;
+
+public interface DashboardService {
+
+    DashboardResponseDto getDashboardData(UUID budgetId, Authentication connectedUser);
+}

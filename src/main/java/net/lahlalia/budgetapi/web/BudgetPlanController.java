@@ -17,6 +17,7 @@ import java.util.UUID;
 @RequestMapping(value = "/api/v1/budget", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class BudgetPlanController {
+
     private final BudgetPlanService budgetPlanService;
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

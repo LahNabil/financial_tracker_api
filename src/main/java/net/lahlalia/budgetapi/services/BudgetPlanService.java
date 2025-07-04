@@ -17,4 +17,6 @@ public interface BudgetPlanService {
 
     void deleteBudgetPlan(UUID id, Authentication connectedUser);
     BudgetChartDataDto getCurrentMonthBudgetWithTransactions(Authentication connectedUser);
+
+    UUID findByMonthAndYear(int currentMonth, int currentYear, Authentication connectedUser);
 }

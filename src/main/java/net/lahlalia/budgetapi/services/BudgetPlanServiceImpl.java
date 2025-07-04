@@ -76,6 +76,18 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
                 .build();
     }
 
+    @Override
+    public UUID findByMonthAndYear(int currentMonth, int currentYear, Authentication connectedUser) {
+        User user = ((User) connectedUser.getPrincipal());
+        BudgetPlan budgetPlan = budgetPlanRepository.findByUserIdAndMonthAndYear(
+                        user.getId(), currentMonth, currentYear)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No budget plan found for month: " + currentMonth + " and year: " + currentYear
+                ));
+
+        return budgetPlan.getId();
+    }
+
 
     @Override
     public UUID save(BudgetPlanDto request, Authentication connectedUser) {
@@ -95,10 +107,6 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
         }
         return budgetPlanMapper.toDto(budgetPlan);
 
-//        return budgetPlanRepository.findById(id)
-//                .map(budgetPlanMapper::toDto)
-//                .orElseThrow(()-> new EntityNotFoundException("No budget Plan found with this ID"));
-//
     }
 
     @Override
@@ -109,11 +117,6 @@ public class BudgetPlanServiceImpl implements BudgetPlanService {
         List<BudgetPlanDto> budgetPlanDtoList = budgetPlans.stream()
                 .map(budgetPlanMapper::toDto)
                 .toList();
-//        List<BudgetPlanDto> content = budgetPlans
-//                .getContent()
-//                .stream()
-//                .map(budgetPlanMapper::toDto)
-//                .collect(Collectors.toList());
         return new PageResponse<>(
                 budgetPlanDtoList,
                 budgetPlans.getNumber(),

@@ -1,5 +1,6 @@
 package net.lahlalia.budgetapi.repositories;
 
+import net.lahlalia.budgetapi.dtos.CategorySummaryDto;
 import net.lahlalia.budgetapi.entities.Transaction;
 import net.lahlalia.budgetapi.enums.TransactionStatus;
 import net.lahlalia.budgetapi.enums.TransactionType;
@@ -20,20 +21,30 @@ SELECT transaction from Transaction transaction WHERE transaction.budgetPlan.id 
 """)
     Page<Transaction> findAllByBudgetId(UUID budgetId, Pageable pageable);
 
+
     @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = :type AND t.status = :status")
     Optional<BigDecimal> sumAmountByBudgetIdAndTypeAndStatus(
             @Param("budgetId") UUID budgetId,
             @Param("type") TransactionType type,
             @Param("status") TransactionStatus status);
 
-    @Query("SELECT bp.initialIncome - " +
-            "(SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = 'EXPENSE' AND t.status = 'REAL') + " +
-            "(SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = 'INCOME' AND t.status = 'REAL') " +
-            "FROM BudgetPlan bp WHERE bp.id = :budgetId")
-    BigDecimal calculateRemainingBudget(@Param("budgetId") UUID budgetId);
+//    @Query("SELECT bp.initialIncome - " +
+//            "(SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = 'EXPENSE' AND t.status = 'REAL') + " +
+//            "(SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = 'INCOME' AND t.status = 'REAL') " +
+//            "FROM BudgetPlan bp WHERE bp.id = :budgetId")
+//    BigDecimal calculateRemainingBudget(@Param("budgetId") UUID budgetId);
 
 
     @Query("SELECT t FROM Transaction t WHERE t.budgetPlan.id = :budgetPlanId ORDER BY t.date ASC")
     List<Transaction> findTransactionsByBudgetPlanIdOrderByDate(@Param("budgetPlanId") UUID budgetPlanId);
+
+    @Query("""
+    SELECT new net.lahlalia.budgetapi.dtos.CategorySummaryDto(t.category, SUM(t.amount))
+    FROM Transaction t
+    WHERE t.budgetPlan.id = :budgetId AND t.type = 'EXPENSE'
+    GROUP BY t.category
+    """)
+    List<CategorySummaryDto> getExpensesByCategory(@Param("budgetId") UUID budgetId);
+
 
 }
