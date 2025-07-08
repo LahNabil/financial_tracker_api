@@ -211,7 +211,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public List<CategorySummaryDto> getExpensesByCategory(UUID budgetId, Authentication connectedUser) {
-        // Optional: validate budget ownership
+
         return transactionRepository.getExpensesByCategory(budgetId);
     }
 

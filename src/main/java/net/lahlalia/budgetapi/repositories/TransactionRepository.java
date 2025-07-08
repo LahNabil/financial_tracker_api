@@ -28,11 +28,6 @@ SELECT transaction from Transaction transaction WHERE transaction.budgetPlan.id 
             @Param("type") TransactionType type,
             @Param("status") TransactionStatus status);
 
-//    @Query("SELECT bp.initialIncome - " +
-//            "(SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = 'EXPENSE' AND t.status = 'REAL') + " +
-//            "(SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.type = 'INCOME' AND t.status = 'REAL') " +
-//            "FROM BudgetPlan bp WHERE bp.id = :budgetId")
-//    BigDecimal calculateRemainingBudget(@Param("budgetId") UUID budgetId);
 
 
     @Query("SELECT t FROM Transaction t WHERE t.budgetPlan.id = :budgetPlanId ORDER BY t.date ASC")
@@ -41,10 +36,26 @@ SELECT transaction from Transaction transaction WHERE transaction.budgetPlan.id 
     @Query("""
     SELECT new net.lahlalia.budgetapi.dtos.CategorySummaryDto(t.category, SUM(t.amount))
     FROM Transaction t
-    WHERE t.budgetPlan.id = :budgetId AND t.type = 'EXPENSE'
+    WHERE t.budgetPlan.id = :budgetId AND t.type = 'EXPENSE' AND t.status = "REAL"
     GROUP BY t.category
     """)
     List<CategorySummaryDto> getExpensesByCategory(@Param("budgetId") UUID budgetId);
+
+
+    @Query("SELECT t FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.status = 'REAL'")
+    List<Transaction> findRealTransactionsByBudget(@Param("budgetId") UUID budgetId);
+
+    @Query("SELECT t FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.status = 'EXPECTED'")
+    List<Transaction> findExpectedTransactionsByBudget(@Param("budgetId") UUID budgetId);
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.status = 'REAL' AND t.type = 'INCOME'")
+    BigDecimal sumRealIncome(@Param("budgetId") UUID budgetId);
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.budgetPlan.id = :budgetId AND t.status = 'EXPECTED' AND t.type = 'INCOME'")
+    BigDecimal sumExpectedIncome(@Param("budgetId") UUID budgetId);
+
+
+
 
 
 }

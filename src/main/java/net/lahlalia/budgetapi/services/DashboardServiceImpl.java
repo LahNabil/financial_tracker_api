@@ -2,10 +2,18 @@ package net.lahlalia.budgetapi.services;
 
 import lombok.RequiredArgsConstructor;
 import net.lahlalia.budgetapi.dtos.DashboardResponseDto;
+import net.lahlalia.budgetapi.dtos.PageResponse;
+import net.lahlalia.budgetapi.dtos.TransactionComparisonDto;
+import net.lahlalia.budgetapi.dtos.TransactionDto;
+import net.lahlalia.budgetapi.enums.TransactionStatus;
+import net.lahlalia.budgetapi.enums.TransactionType;
+import net.lahlalia.budgetapi.repositories.TransactionRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -14,6 +22,7 @@ public class DashboardServiceImpl implements DashboardService{
 
     private final TransactionService transactionService;
     private final BudgetPlanService budgetPlanService;
+    private final TransactionRepository transactionRepository;
 
 
     @Override
@@ -32,5 +41,40 @@ public class DashboardServiceImpl implements DashboardService{
                 .totalExpenses(totalExpenses)
                 .expensesByCategory(categoryBreakdown)
                 .build();
+    }
+
+    @Override
+    public TransactionComparisonDto getTransactionComparison(UUID budgetId, Authentication connectedUser) {
+        if(budgetId == null){
+            int currentMonth = LocalDate.now().getMonthValue();
+            int currentYear = LocalDate.now().getYear();
+            budgetId = budgetPlanService.findByMonthAndYear(currentMonth, currentYear, connectedUser);
+        }
+
+
+        // Get transactions using service methods where possible
+        PageResponse<TransactionDto> allTransactions = transactionService.findAllTransactionsByBudget(
+                budgetId, 0, Integer.MAX_VALUE, connectedUser
+        );
+
+        // Filter real vs expected transactions
+        List<TransactionDto> realTransactions = allTransactions.getContent().stream()
+                .filter(t -> t.getStatus() == TransactionStatus.REAL)
+                .toList();
+
+        List<TransactionDto> expectedTransactions = allTransactions.getContent().stream()
+                .filter(t -> t.getStatus() == TransactionStatus.EXPECTED)
+                .toList();
+
+        // Calculate totals using repository for better performance
+        BigDecimal totalReal = transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(
+                budgetId, TransactionType.INCOME, TransactionStatus.REAL
+        ).orElse(BigDecimal.ZERO);
+
+        BigDecimal totalExpected = transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(
+                budgetId, TransactionType.INCOME, TransactionStatus.EXPECTED
+        ).orElse(BigDecimal.ZERO);
+
+        return new TransactionComparisonDto(realTransactions, expectedTransactions, totalReal, totalExpected);
     }
 }

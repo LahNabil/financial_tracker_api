@@ -2,6 +2,7 @@ package net.lahlalia.budgetapi.web;
 
 import lombok.RequiredArgsConstructor;
 import net.lahlalia.budgetapi.dtos.DashboardResponseDto;
+import net.lahlalia.budgetapi.dtos.TransactionComparisonDto;
 import net.lahlalia.budgetapi.services.DashboardService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,13 @@ public class DashboardController {
             ){
         var data = dashboardService.getDashboardData(budgetId, connectedUser);
         return ResponseEntity.ok(data);
+    }
+    @GetMapping(value="/line", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TransactionComparisonDto> getTransactionComparison(
+            @RequestParam(required = false) UUID budgetId,
+            Authentication connectedUser
+    ){
+        return ResponseEntity.ok(dashboardService.getTransactionComparison(budgetId, connectedUser));
     }
 
 }
