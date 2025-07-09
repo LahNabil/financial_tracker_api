@@ -14,6 +14,5 @@ public class TransactionComparisonDto {
 
     List<TransactionDto> realTransactions;
     List<TransactionDto> expectedTransactions;
-    BigDecimal totalReal;
-    BigDecimal totalExpected;
+
 }

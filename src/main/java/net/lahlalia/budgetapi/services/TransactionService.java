@@ -4,6 +4,7 @@ import net.lahlalia.budgetapi.dtos.CategorySummaryDto;
 import net.lahlalia.budgetapi.dtos.PageResponse;
 import net.lahlalia.budgetapi.dtos.TransactionDto;
 import net.lahlalia.budgetapi.dtos.UpdateTransactionDto;
+import net.lahlalia.budgetapi.enums.TransactionStatus;
 import org.springframework.security.core.Authentication;
 
 import java.math.BigDecimal;
@@ -24,5 +25,7 @@ public interface TransactionService {
     BigDecimal getRemainingBudget(UUID budgetId, Authentication connectedUser);
 
     List<CategorySummaryDto> getExpensesByCategory(UUID budgetId, Authentication connectedUser);
+    List<TransactionDto> findTransactionsByStatus(UUID budgetId, TransactionStatus status, Authentication connectedUser);
+
 
 }

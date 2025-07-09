@@ -51,30 +51,10 @@ public class DashboardServiceImpl implements DashboardService{
             budgetId = budgetPlanService.findByMonthAndYear(currentMonth, currentYear, connectedUser);
         }
 
+        List<TransactionDto> realTransactions = transactionService.findTransactionsByStatus(budgetId, TransactionStatus.REAL, connectedUser);
+        List<TransactionDto> expectedTransactions = transactionService.findTransactionsByStatus(budgetId, TransactionStatus.EXPECTED, connectedUser);
 
-        // Get transactions using service methods where possible
-        PageResponse<TransactionDto> allTransactions = transactionService.findAllTransactionsByBudget(
-                budgetId, 0, Integer.MAX_VALUE, connectedUser
-        );
 
-        // Filter real vs expected transactions
-        List<TransactionDto> realTransactions = allTransactions.getContent().stream()
-                .filter(t -> t.getStatus() == TransactionStatus.REAL)
-                .toList();
-
-        List<TransactionDto> expectedTransactions = allTransactions.getContent().stream()
-                .filter(t -> t.getStatus() == TransactionStatus.EXPECTED)
-                .toList();
-
-        // Calculate totals using repository for better performance
-        BigDecimal totalReal = transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(
-                budgetId, TransactionType.INCOME, TransactionStatus.REAL
-        ).orElse(BigDecimal.ZERO);
-
-        BigDecimal totalExpected = transactionRepository.sumAmountByBudgetIdAndTypeAndStatus(
-                budgetId, TransactionType.INCOME, TransactionStatus.EXPECTED
-        ).orElse(BigDecimal.ZERO);
-
-        return new TransactionComparisonDto(realTransactions, expectedTransactions, totalReal, totalExpected);
+        return new TransactionComparisonDto(realTransactions, expectedTransactions);
     }
 }

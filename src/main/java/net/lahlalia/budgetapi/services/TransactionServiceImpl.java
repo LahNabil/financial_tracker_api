@@ -215,6 +215,24 @@ public class TransactionServiceImpl implements TransactionService{
         return transactionRepository.getExpensesByCategory(budgetId);
     }
 
+    @Override
+    public List<TransactionDto> findTransactionsByStatus(UUID budgetId, TransactionStatus status, Authentication connectedUser) {
+        // (Optional) check if user has access to this budget
+        List<Transaction> transactions;
+
+        if (status == TransactionStatus.REAL) {
+            transactions = transactionRepository.findRealTransactionsByBudget(budgetId);
+        } else if (status == TransactionStatus.EXPECTED) {
+            transactions = transactionRepository.findExpectedTransactionsByBudget(budgetId);
+        } else {
+            transactions = List.of(); // empty list for unknown status
+        }
+
+        return transactions.stream()
+                .map(transactionMapper::toDto)
+                .toList();
+    }
+
 
 
 }

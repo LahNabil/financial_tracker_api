@@ -56,6 +56,4 @@ SELECT transaction from Transaction transaction WHERE transaction.budgetPlan.id 
 
 
 
-
-
 }
