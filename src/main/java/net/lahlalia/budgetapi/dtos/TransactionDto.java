@@ -23,21 +23,21 @@ import java.util.UUID;
 public class TransactionDto {
 
     private UUID id;
-    @NotNull(message = "200")
-    @NotEmpty(message = "201")
-    @NotBlank(message = "201")
+    @NotNull(message = "Title Mandatory")
+    @NotEmpty(message = "Title Mandatory")
+    @NotBlank(message = "Title Mandatory")
     String title;
-    @Positive(message = "202")
-    @NotNull(message = "203")
+    @Positive(message = "Please Enter a Positive Value")
+    @NotNull(message = "Amount is mandatory")
     BigDecimal amount;
     LocalDate date;
-    @NotNull(message = "204")
+    @NotNull(message = "Status is mandatory")
     @Enumerated(EnumType.STRING)
     TransactionStatus status;
-    @NotNull(message = "205")
+    @NotNull(message = "Category is mandatory")
     @Enumerated(EnumType.STRING)
     TransactionCategory category;
-    @NotNull(message = "206")
+    @NotNull(message = "Type is Mandatory")
     @Enumerated(EnumType.STRING)
     TransactionType type;
     String description;

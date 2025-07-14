@@ -14,15 +14,15 @@ import java.util.UUID;
 public class BudgetPlanDto {
 
     private UUID id;
-    @NotNull(message = "100")
-    @Positive(message = "101")
-    @Min(value = 1, message = "102" )
-    @Max(value = 12, message ="103" )
+    @NotNull(message = "Month is mandatory")
+    @Positive(message = "Please Enter a valid month")
+    @Min(value = 1, message = "Please Enter a valid month" )
+    @Max(value = 12, message ="Please Enter a valid month" )
     private Integer month;
-    @NotNull(message = "104")
-    @Positive(message = "105")
+    @NotNull(message = "Year is mandatory ")
+    @Positive(message = "Please Enter a valid Year")
     private Integer year;
-    @NotNull(message = "106")
-    @Positive(message = "107")
+    @NotNull(message = "Budget Intial amount is mandatory")
+    @Positive(message = "Please Enter a valid Initial Amount")
     private BigDecimal initialIncome;
 }
