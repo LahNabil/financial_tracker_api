@@ -23,6 +23,6 @@ public class ProfileController {
     @PutMapping(value = "/password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest request) {
         profileService.updatePassword(request);
-        return ResponseEntity.ok("Password updated successfully.");
+        return ResponseEntity.noContent().build();
     }
 }
